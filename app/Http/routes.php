@@ -41,6 +41,12 @@ Route::get('users/test', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success', 'data' => ['user' => $user]]);
 }]);
 
+Route::get('users/current/requests', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $requests = $user->requests;
+    return response()->json(['status' => 'success', 'data' => ['requests' => $requests]]);
+}]);
+
 Route::get('users/current/organizations', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
     $orgs = $user->organizations;
@@ -70,9 +76,10 @@ Route::post('organizations/register', ['before' => 'jwt.auth', function () {
 Route::post('requests', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
 
-    $item = request('item');
+    $item = request('item_name');
     $quantity = request('quantity');
     $unit = request('unit');
+    
 
 }]);
 
