@@ -31,7 +31,13 @@ Route::post('users/login', function () {
     return response(['status'=>'failed', 'data' => ['reason' => 'the credential is not right']]);
 });
 
+Route::get('users/test', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    return response()->json(['status' => 'success', 'data' => ['user' => $user]]);
+}]);
+
 Route::post('/api/organizations/register', function () {
+
     $name = request('name');
     $address = request('address');
     $orgType = request('org_type');
