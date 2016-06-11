@@ -10,6 +10,10 @@ class Request extends Model
         return $this->belongsTo(Organization::class);
     }
 
+    public function tags() {
+        return $this->belongsToMany(Tag::class);
+    }
+
     public function requester() {
         return $this->belongsTo(User::class);
     }

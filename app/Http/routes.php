@@ -76,11 +76,39 @@ Route::post('organizations/register', ['before' => 'jwt.auth', function () {
 Route::post('requests', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
 
-    $item = request('item_name');
+    $organizationId = request('organization_id');
+
+    if ( is_null($organizationId)) {
+        $organizationId = $user->organizations->first()->id;
+    }
+
+    //TODO check if the org id given is owned by the user
+
+    $name = request('item_name');
     $quantity = request('quantity');
     $unit = request('unit');
-    
+    $tagString = request('tags');
+    $tags = array_map('strtolower', explode(',', $tagString));
+    $modelIds = [];
+    foreach($tags as $tag) {
+       $model = \App\Tag::where('name', $tag)->first();
+        if (! $model) {
+            $model = \App\Tag::create(['name' => $tag]);
+        }
+        $modelIds[] = $model->id;
+    }
 
+    $request = new \App\Request();
+
+    $request->name = $name;
+    $request->quantity = $quantity;
+    $request->unit = $unit;
+
+    $request->organization_id = $organizationId;
+    $request->user_id = $user->id;
+    $request->save();
+    $request->tags()->attach($modelIds);
+    return response()->json(['status' => 'success']);
 }]);
 
 Route::post('/api/trigger', function () {
