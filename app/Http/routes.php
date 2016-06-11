@@ -112,7 +112,7 @@ Route::post('requests', ['before' => 'jwt.auth', function () {
 }]);
 
 Route::get('organizations', function () {
-    $orgs = Organization::all();
+    $orgs = \App\Organization::all();
     return response(['status' => 'success', 'data' => ['organizations' => $orgs]]);
 });
 
