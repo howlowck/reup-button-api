@@ -24,7 +24,15 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+//    protected $appends = [
+//        'requests'
+//    ];
+
     public function organizations () {
-        return $this->belongsToMany(Organization::class);
+        return $this->belongsToMany(Organization::class)->withPivot('role');
+    }
+
+    public function requests() {
+        return $this->hasMany(Request::class);
     }
 }

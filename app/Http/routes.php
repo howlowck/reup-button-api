@@ -31,9 +31,20 @@ Route::post('users/login', function () {
     return response(['status'=>'failed', 'data' => ['reason' => 'the credential is not right']]);
 });
 
+Route::get('users/requests', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $requests = $user->requests;
+}]);
+
 Route::get('users/test', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
     return response()->json(['status' => 'success', 'data' => ['user' => $user]]);
+}]);
+
+Route::get('users/current/organizations', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $orgs = $user->organizations;
+    return response()->json(['status' => 'success', 'data' => ['organizations' => $orgs]]);
 }]);
 
 Route::post('organizations/register', ['before' => 'jwt.auth', function () {
@@ -43,8 +54,6 @@ Route::post('organizations/register', ['before' => 'jwt.auth', function () {
     $street = request('street');
     $city = request('city');
     $state = request('state');
-//    $orgType = request('org_type');
-//    $contactEmail = request('contact_email');
 
     $org = new \App\Organization();
     $org->email = $user->email;
@@ -58,9 +67,14 @@ Route::post('organizations/register', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success']);
 }]);
 
-Route::post('/api/items/request', function () {
+Route::post('requests', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
 
-});
+    $item = request('item');
+    $quantity = request('quantity');
+    $unit = request('unit');
+
+}]);
 
 Route::post('/api/trigger', function () {
     $type = request('intent_type', 'need');
