@@ -17,4 +17,12 @@ class Request extends Model
     public function requester() {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeOpen($query) {
+        return $query->where('fulfilled', false);
+    }
+
+    public function scopeOfOrgs($query, array $orgIds) {
+        return $query->whereIn('organization_id', $orgIds);
+    }
 }

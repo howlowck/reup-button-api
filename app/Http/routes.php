@@ -140,3 +140,11 @@ Route::get('tags', function () {
     $tags = \App\Tag::all();
     return response()->json(['status' => 'success', 'data' => ['tags' => $tags]]);
 });
+
+Route::get('users/current/inbox', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $orgIds = $user->subscriptions->lists('organization_id')->toArray();
+    $requests = \App\Request::ofOrgs($orgIds)->open()->get();
+
+    return response()->json(['status' => 'success', 'data' => ['requests' => $requests]]);
+}]);

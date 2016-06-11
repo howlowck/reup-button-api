@@ -43,4 +43,8 @@ class User extends Authenticatable
     public function subscribeTags() {
         return $this->hasMany(SubscribeTag::class);
     }
+
+    public function scopeUnfulfilled($query) {
+//        return $query->
+    }
 }
