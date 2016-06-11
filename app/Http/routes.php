@@ -111,6 +111,11 @@ Route::post('requests', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success']);
 }]);
 
+Route::get('organizations', function () {
+    $orgs = Organization::all();
+    return response(['status' => 'success', 'data' => ['organizations' => $orgs]]);
+});
+
 Route::post('subscribe/organization', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
     $orgId = request('organization_id');
