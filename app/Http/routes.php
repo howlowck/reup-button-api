@@ -36,17 +36,26 @@ Route::get('users/test', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success', 'data' => ['user' => $user]]);
 }]);
 
-Route::post('/api/organizations/register', ['before' => 'jwt.auth', function () {
+Route::post('organizations/register', ['before' => 'jwt.auth', function () {
     $user = JWTAuth::parseToken()->toUser();
 
-    $name = request('name');
-    $address = request('address');
-    $orgType = request('org_type');
-    $contactEmail = request('contact_email');
+    $name = request('org_name');
+    $street = request('street');
+    $city = request('city');
+    $state = request('state');
+//    $orgType = request('org_type');
+//    $contactEmail = request('contact_email');
 
     $org = new \App\Organization();
+    $org->email = $user->email;
     $org->name = $name;
-    
+    $org->street = $street;
+    $org->city = $city;
+    $org->state = $state;
+
+    $org->save();
+    $user->organizations()->attach($org->id, ['role' => 'admin']);
+    return response()->json(['status' => 'success']);
 }]);
 
 Route::post('/api/items/request', function () {
