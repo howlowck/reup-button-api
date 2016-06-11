@@ -153,3 +153,12 @@ Route::get('users/current/inbox', ['before' => 'jwt.auth', function () {
 
     return response()->json(['status' => 'success', 'data' => ['requests' => $requests]]);
 }]);
+
+Route::post('requests/{id}/fulfill', ['before' => 'jwt.auth', function ($id) {
+    $user = JWTAuth::parseToken()->toUser();
+    $request = \App\Request::find($id);
+    $request->fulfilled = true;
+    $request->fulfilled_by = $user->id;
+    $request->save();
+    return response()->json(['status' => 'success', 'request' => $request]);
+}]);
