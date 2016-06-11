@@ -111,17 +111,32 @@ Route::post('requests', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success']);
 }]);
 
-Route::post('/api/trigger', function () {
-    $type = request('intent_type', 'need');
-    $lat = request('lat');
-    $long = request('long');
-    $device = request('device_id');
-});
+Route::post('subscribe/organization', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $orgId = request('organization_id');
+    $subscription = new \App\Subscription();
+    $subscription->user_id = $user->id;
+    $subscription->organization_id = $orgId;
+    $subscription->save();
+    return response()->json(['status' => 'success']);
+}]);
 
-Route::post('/api/subscribe', function () {
+Route::post('subscribe/tags', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
+    $idStr = request('tags');
+    $ids = explode(',', $idStr);
 
-});
+    foreach($ids as $id) {
+        $model = new \App\SubscribeTag();
+        $model->user_id = $user->id;
+        $model->tag_id = (int) $id;
+        $model->save();
+    }
 
-Route::get('/api/needs', function () {
+    return response()->json(['status' => 'success']);
+}]);
 
+Route::get('tags', function () {
+    $tags = \App\Tag::all();
+    return response()->json(['status' => 'success', 'data' => ['tags' => $tags]]);
 });

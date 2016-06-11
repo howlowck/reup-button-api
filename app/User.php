@@ -35,4 +35,12 @@ class User extends Authenticatable
     public function requests() {
         return $this->hasMany(Request::class);
     }
+
+    public function subscriptions() {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function subscribeTags() {
+        return $this->hasMany(SubscribeTag::class);
+    }
 }
