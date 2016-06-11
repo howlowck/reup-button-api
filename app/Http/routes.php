@@ -19,6 +19,18 @@ Route::post('users/register', function () {
     return response(['status' => 'success', 'data' => ['token' => $token]]);
 });
 
+Route::post('users/login', function () {
+    $email = request('email');
+    $password = request('password');
+    if (Auth::attempt(compact('email', 'password'))) {
+        $user = \App\User::where('email', $email)->first();
+        $token = JWTAuth::fromUser($user);
+        return response(['status' => 'success', 'data' => ['token' => $token]]);
+    };
+
+    return response(['status'=>'failed', 'data' => ['reason' => 'the credential is not right']]);
+});
+
 Route::post('/api/organizations/register', function () {
     $name = request('name');
     $address = request('address');
@@ -26,8 +38,8 @@ Route::post('/api/organizations/register', function () {
     $contactEmail = request('contact_email');
 });
 
-Route::post('/api/buttons/register', function () {
-    $deviceType = request('device_type');
+Route::post('/api/items/request', function () {
+
 });
 
 Route::post('/api/trigger', function () {
