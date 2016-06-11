@@ -17,7 +17,6 @@ Route::post('users/register', function () {
 
     $token = JWTAuth::fromUser($user);
     return response(['status' => 'success', 'data' => ['token' => $token]]);
-
 });
 
 Route::post('/api/organizations/register', function () {
