@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganizationTypesTable extends Migration
+class AddOrganizationUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,8 @@ class CreateOrganizationTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('organization_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+        Schema::table('organization_user', function (Blueprint $table) {
+            $table->string('role');
         });
     }
 
@@ -25,6 +24,8 @@ class CreateOrganizationTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('organization_types');
+        Schema::table('organization_user', function (Blueprint $table){
+            $table->removeColumn('role');
+        });
     }
 }

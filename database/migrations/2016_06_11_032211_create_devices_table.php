@@ -30,6 +30,6 @@ class CreateDevicesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('devices');
     }
 }

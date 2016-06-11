@@ -28,6 +28,6 @@ class CreateItemTypesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('item_types');
     }
 }

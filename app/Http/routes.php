@@ -36,13 +36,18 @@ Route::get('users/test', ['before' => 'jwt.auth', function () {
     return response()->json(['status' => 'success', 'data' => ['user' => $user]]);
 }]);
 
-Route::post('/api/organizations/register', function () {
+Route::post('/api/organizations/register', ['before' => 'jwt.auth', function () {
+    $user = JWTAuth::parseToken()->toUser();
 
     $name = request('name');
     $address = request('address');
     $orgType = request('org_type');
     $contactEmail = request('contact_email');
-});
+
+    $org = new \App\Organization();
+    $org->name = $name;
+    
+}]);
 
 Route::post('/api/items/request', function () {
 
